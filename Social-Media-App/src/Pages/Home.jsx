@@ -1,6 +1,5 @@
 import React from 'react'
-import CreatePost from '../Components/CreatePost'
-
+import CreatePost from '../Components/CreatePost/CreatePost'
 const Home = () => {
   return (
     <div>
