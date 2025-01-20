@@ -2,6 +2,8 @@
 import React,{useState} from 'react'
 import Button from '../Button/Button';
 import FeedListing from '../FeedListing/FeedListing';
+import { useSelector,useDispatch } from 'react-redux';
+import { createPost } from '../../Store/Slices/feedSlice';
 
 const CreatePost = () => {
     
@@ -14,9 +16,11 @@ const CreatePost = () => {
         let post = {
             title,
             description,
-            createAt: new Date(),
+            createAt: new Date().toISOString,
             imageURL:"https://via.placeholder.com/150"
         }
+        const dispatch=useDispatch()
+        dispatch(createPost)
     }
   return (
     <div>
