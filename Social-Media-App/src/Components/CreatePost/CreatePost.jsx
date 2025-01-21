@@ -9,6 +9,7 @@ const CreatePost = () => {
     
         const [title, setTitle] = useState("");
         const [description, setDescription] = useState("");
+        const dispatch=useDispatch()
 
     const createPostHandler=()=>{
         console.log("Title",title)
@@ -16,11 +17,11 @@ const CreatePost = () => {
         let post = {
             title,
             description,
-            createAt: new Date().toISOString,
+            createdAt: new Date().toISOString(), // Correctly call the function
+
             imageURL:"https://via.placeholder.com/150"
         }
-        const dispatch=useDispatch()
-        dispatch(createPost)
+        dispatch(createPost(post))
     }
   return (
     <div>
