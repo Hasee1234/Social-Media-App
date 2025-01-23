@@ -1,7 +1,7 @@
 import React,{useEffect} from 'react'
 import { useSelector,useDispatch } from 'react-redux';
 import Button from '../Button/Button'
-import { getPosts } from '../../Store/Slices/feedSlice';
+import { deletePost, getPosts,updateDocId } from '../../Store/Slices/feedSlice';
 export default function FeedListing() {
   
     const feed=useSelector(store=>store.feedSlice.feed)//take the feed key(which is empty at start) from feedslice which is made in store
@@ -15,7 +15,17 @@ export default function FeedListing() {
         dispatch(getPosts())
 
       }, [])
-      
+    
+      const handleDelete=(id)=>{
+        console.log("delete clicked",id)
+        dispatch(deletePost(id))
+      }
+
+
+      const handleEdit=(id)=>{
+        console.log("edit clicked",id)
+        dispatch(updateDocId(id))
+    }
   return (
     <div>
       <h1>Feed Listing</h1>
@@ -27,7 +37,8 @@ export default function FeedListing() {
                 <div key={post.id}>
                     <h3>{post?.title}</h3>
                     <p>{post?.description} </p>
-
+                  <Button title={"Delete"} onClickHandler={()=>{handleDelete(post.id)}}/>
+                  <Button title={"Edit"} onClickHandler={()=>{handleEdit(post.id)}}/>
                 </div>
             )
         })

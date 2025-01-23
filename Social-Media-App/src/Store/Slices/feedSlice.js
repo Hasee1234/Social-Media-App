@@ -1,16 +1,57 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import { db } from "../../Config/firebase";
-import { addDoc, collection,getDocs ,onSnapshot} from "firebase/firestore";
+import { addDoc, collection,getDocs,query,where,onSnapshot, orderBy, limit,doc,deleteDoc,updateDoc} from "firebase/firestore";
 
+//update post
+export const updatePost=createAsyncThunk(
+    "feed/updatePost",
+    async(post)=>{
+        try{
+            const docRef=doc(db,"Posts",post.id)
+            await updateDoc(docRef,post)//you can also use getdoc but its hard update
+                return post
+            
+        }
+        catch(error){
+            console.log("error",error)
+        }
+    }
+)
+
+
+//delete post
+export const deletePost=createAsyncThunk(
+    "feed/deletePost",
+    async(id)=>{
+        try{
+            const docRef=doc(db,"Posts",id)
+            await deleteDoc(docRef)
+            return id 
+        }
+        catch(error){
+            console.log("error",error)
+        }
+    }
+
+)
 
 
 export const getPosts=createAsyncThunk(
     "feed/getPost",
     async()=>{
         try{
-            //one time data
+            //query learning
             const collectionRef=collection(db,"Posts")
-            const docs=await getDocs(collectionRef)
+            const queryRef=query(collectionRef,where("title","!=","shirt"))//for single where
+            // const queryRef=query(collectionRef,where("title","==","shirt"),where("title","==","jeans"))//to pass two condition use two where,
+            // const queryRef=query(collectionRef,or(where("title","==","shirt"),where("title","==","jeans")))// //also can use or and and
+            // orderby(to order things) and limit(to limit number of results)
+            // const queryRef=query(collectionRef,where("title","==","title 1"),orderBy("title"),limit(3))//for limit the upto 3 results
+            
+            
+            //one time data
+            // const docs=await getDocs(collectionRef)
+            const docs=await getDocs(queryRef)
             let data=[]
             console.log("docs",docs)
             docs.forEach((doc)=>{
@@ -64,11 +105,17 @@ const feedSlice=createSlice({
     name:"feed",
     initialState:{
         feed:[],
+        updatePost:null,
     },
     reducers:{
         addFeed:(state,action)=>{
             console.log("action in addFeed",action.payload)
         },
+        updateDocId:(state,action)=>{
+            console.log("action in updateDocId",action.payload)
+            let post=state.updatePost=state.feed.filter((post)=>post.id ===action.payload)
+            state.updatePost=post[0]
+        }
     },
     extraReducers:(builder)=>{
         builder.addCase(createPost.fulfilled,(state,action)=>{
@@ -78,8 +125,20 @@ const feedSlice=createSlice({
         .addCase(getPosts.fulfilled, (state, action) => {
             state.feed = action.payload; // Replace the feed with fetched posts
         })
+        .addCase(deletePost.fulfilled,(state,action)=>{
+            state.feed=state.feed.filter((post)=>post.id!==action.payload)
+        })
+        .addCase(updatePost.fulfilled,(state,action)=>{
+            state.feed=state.feed.map((post)=>{
+                if(post.id === action.payload.id){
+                    return action.payload
+                }
+                return post
+            })
+            state.updatePost=null
+        })
     }
     
 })
-
+export const {addFeed,updateDocId}=feedSlice.actions
 export default feedSlice.reducer
