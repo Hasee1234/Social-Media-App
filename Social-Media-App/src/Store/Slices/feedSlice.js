@@ -89,10 +89,35 @@ export const createPost=createAsyncThunk(
     "feed/CreatePost",
     async(post)=>{
         try{
-            console.log("post here", post)
-            const collectionRef=collection(db,"Posts")//in add doc function you pass two parameters in 1st is collection name and db which we stored ijn collectionRef
-            const response=await addDoc(collectionRef,post);//added new post in firebase
-            console.log("response after firebase store",response);
+
+            // const data = new FormData();
+            // const file=post.file
+            // data.append("file", file);
+            // data.append("upload_preset", "social media app");
+            // data.append("cloud_name", "dd22qjrpn");
+
+            // const res = await fetch("https://api.cloudinary.com/v1_1/dd22qjrpn/image/upload", {
+            //   method: "POST",
+            //   body: data,
+            // });
+            // const uploadedImage = await res.json();
+            // if (uploadedImage.secure_url) {
+            //   console.log("Uploaded image URL:", uploadedImage.secure_url);
+            //   setImageURL(uploadedImage.secure_url);
+            //   let updatedPost={
+            //     title: post.title,
+            //     description: post.description,
+            //     createAt: new Date(),
+            //     imageURL:uploadedImage.secure_url,
+            //   }
+            // }
+
+
+            // console.log("post here", post)
+            // const collectionRef=collection(db,"Posts")//in add doc function you pass two parameters in 1st is collection name and db which we stored ijn collectionRef
+            // // const response=await addDoc(collectionRef,post);//added new post in firebase
+            // const response=await addDoc(collectionRef,  updatedPost);//added new post in firebase
+            // console.log("response after firebase store",response);
 
         }catch(error){
             console.log("error",error)

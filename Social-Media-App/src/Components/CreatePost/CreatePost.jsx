@@ -32,6 +32,9 @@ const CreatePost = () => {
           const createPostHandler=()=>{
             console.log("Title",title)
             console.log("description",description)
+
+            
+
             let postData = {
                 
                 title,
@@ -43,7 +46,7 @@ const CreatePost = () => {
               dispatch(updatePost({...postData,id:post.id}))
               return
             }
-            dispatch(createPost(postData))
+            dispatch(createPost({...postData,file}))//added file here for second method of storage
         }
 
 
@@ -91,8 +94,8 @@ const CreatePost = () => {
         <br />
         <textarea  value={description} placeholder="Description" onChange={(e) => setDescription(e.target.value)}></textarea>
         <br />
-        {/* <input style={{ margin: "5" }} type="file" onChange={uploadImage} disabled={loading}/> */}
-        <input style={{ margin: "5" }} type="file" onChange={ChangeImage} disabled={loading}/>
+        <input style={{ margin: "5" }} type="file" onChange={uploadImage} disabled={loading}/>
+        {/* <input style={{ margin: "5" }} type="file" onChange={ChangeImage} disabled={loading}/> */}
         {loading && <p>Uploading image...</p>}
 
         <br />
