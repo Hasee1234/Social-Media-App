@@ -35,6 +35,7 @@ export default function FeedListing() {
         feed?.map((post)=>{
             return(
                 <div key={post.id}>
+                  <img src={post?.ImageURL} style={{width:"300px"}}/>
                     <h3>{post?.title}</h3>
                     <p>{post?.description} </p>
                   <Button title={"Delete"} onClickHandler={()=>{handleDelete(post.id)}}/>
