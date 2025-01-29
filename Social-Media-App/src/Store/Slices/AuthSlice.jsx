@@ -1,9 +1,31 @@
 //authSlice
 
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../../Config/firebase';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, getDoc ,doc, setDoc} from 'firebase/firestore';
+
+
+export const login =createAsyncThunk(
+    'auth/login',
+    async(user)=>{
+        try{
+
+            console.log("user",user);
+
+           const userCredential=await signInWithEmailAndPassword(auth,user.email,user.password)
+           console.log("usercredential in login",userCredential.user.uid);
+           
+           const docSnap=await getDoc(doc(db,"users",userCredential.user.uid))
+           const dbUser=docSnap?.data()
+           console.log("dbsuser",dbUser);
+           
+           return dbUser
+        }catch(error){
+            console.log("error",error)
+        }
+    }
+)
 
 export const signup = createAsyncThunk(
     'auth/signup',
@@ -19,8 +41,9 @@ export const signup = createAsyncThunk(
                 uid:userCredential.user.uid
 
             }
-            await addDoc(collection(db,"users"),(saveUserTodb))
+            await setDoc(doc(db,"users",userCredential.user.uid),(saveUserTodb))
             return saveUserTodb
+            
 
         } catch (error) {
             console.log("error", error);  
@@ -28,13 +51,6 @@ export const signup = createAsyncThunk(
     }
 )
 
-
-export const login =createAsyncThunk(
-    'auth/login',
-    async(user)=>{
-        return user
-    }
-)
 
 const initialState={
     user: null
@@ -51,7 +67,10 @@ const authSlice=createSlice({
     extraReducers:(builder)=>{
         builder.addCase(signup.fulfilled,(state,action)=>{
             console.log("action",action.payload);
-            
+            state.user=action.payload
+        })
+        builder.addCase(login.fulfilled,(state,action)=>{
+            console.log("action in login",action.payload);
             state.user=action.payload
         })
     }
