@@ -1,9 +1,38 @@
 //authSlice
 
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth, db } from '../../Config/firebase';
 import { addDoc, collection, getDoc ,doc, setDoc} from 'firebase/firestore';
+
+
+export const getCurrentUser=createAsyncThunk(
+    "auth/currentUser",
+    async()=>{
+        try{
+
+            const user=auth.currentUser
+            if (user){
+                return user
+            }   
+            }catch(error){
+                console.log("error",error);
+        }
+    }
+)
+
+export const logout=createAsyncThunk(
+    "auth/logout",
+    async()=>{
+        try{
+            await signOut(auth)
+            return true
+        }catch (error){
+            console.log("error",error);
+            
+        }
+    }
+)
 
 
 export const login =createAsyncThunk(
@@ -73,6 +102,14 @@ const authSlice=createSlice({
             console.log("action in login",action.payload);
             state.user=action.payload
         })
+        builder.addCase(logout.fulfilled,(state,action)=>{
+            console.log("action in logout",action.payload);
+            state.user=null
+        })  
+    builder.addCase(getCurrentUser.fulfilled, (state,action)=>{
+        console.log("reducer case in login", action.payload);
+        state.user = action.payload
+    })
     }
 })
 

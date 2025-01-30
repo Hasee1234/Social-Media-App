@@ -1,7 +1,6 @@
 
 import React,{useState,useEffect} from 'react'
 import Button from '../Button/Button';
-import FeedListing from '../FeedListing/FeedListing';
 import { useSelector,useDispatch } from 'react-redux';
 import { createPost,updatePost } from '../../Store/Slices/feedSlice';
 
@@ -100,7 +99,6 @@ const CreatePost = () => {
 
         <br />
         <Button onClickHandler={createPostHandler} title={post?"UpdatePost":"CreatePost"} />
-        <FeedListing/>
     </div>
   )
 }
