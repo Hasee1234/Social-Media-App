@@ -1,23 +1,35 @@
 //authSlice
 
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth, db } from '../../Config/firebase';
 import { addDoc, collection, getDoc ,doc, setDoc} from 'firebase/firestore';
 
 
-export const getCurrentUser=createAsyncThunk(
+export const getCurrentUser = createAsyncThunk(
     "auth/currentUser",
-    async()=>{
-        try{
-
-            const user=auth.currentUser
-            if (user){
-                return user
-            }   
-            }catch(error){
-                console.log("error",error);
+    async (setLoading, store)=>{
+        try {
+            setLoading(true)
+            onAuthStateChanged(auth,async(user) => {
+                if (user) {
+                  const uid = user.uid;
+                  const docSnap = await getDoc(doc(db, "users",uid))
+                  const dbUser = docSnap?.data()
+                  store.dispatch(setUser(dbUser))
+                  console.log("dbUser",dbUser);
+                  setLoading(false)
+                } else{
+                    setLoading(false)
+                }
+              });
+              return 
+        } catch (error) {
+            setLoading(false)
+            console.log(error);
+            
         }
+         
     }
 )
 

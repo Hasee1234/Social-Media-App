@@ -1,4 +1,5 @@
 import React,{useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { login} from '../../Store/Slices/AuthSlice';
 
@@ -8,6 +9,7 @@ export default function Login() {
     const [password, setPassword] = useState("")
 
     const dispatch = useDispatch()
+    const navigate=useNavigate()
 
     const handleLogin = ()=>{
         let user = {
@@ -17,7 +19,13 @@ export default function Login() {
   
         dispatch(login(user))
       }
-  
+      
+      const handleRegister=()=>{
+        console.log("register");
+        navigate('/signup')
+        
+      }
+
   return (
     <div>
     <h1>Login Page</h1>
@@ -25,7 +33,8 @@ export default function Login() {
     <br/>
     <input type="password" placeholder='Enter password' onChange={(e)=>setPassword(e.target.value)}/>
      <button onClick={handleLogin}>Login</button>
-     {/* <button onClick={handleRegister}>Register</button> */}
+     <br />
+     <button onClick={handleRegister}>Register</button>
 </div>
   )
 }

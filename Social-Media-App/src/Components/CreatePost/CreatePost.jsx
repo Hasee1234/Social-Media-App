@@ -12,6 +12,7 @@ const CreatePost = () => {
         const [loading, setLoading] = useState(false);
         const [file, setfile] = useState(null)
 
+        const User=useSelector(store=>store.authSlice.User)
         const post=useSelector(store=>store.feedSlice.updatePost)
         const dispatch=useDispatch()
 
@@ -35,7 +36,7 @@ const CreatePost = () => {
             
 
             let postData = {
-                
+                // uid :User.uid,
                 title,
                 description,
                 createAt: new Date(),

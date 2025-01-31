@@ -16,7 +16,8 @@ export default function FeedListing() {
 
       }, [])
     
-      const handleDelete=(id)=>{
+      const handleDelete=(id,uid)=>{
+        
         console.log("delete clicked",id)
         dispatch(deletePost(id))
       }
@@ -36,7 +37,8 @@ export default function FeedListing() {
             return(
                 <div key={post.id}>
                   <img src={post?.ImageURL} style={{width:"300px"}}/>
-                    <h3>{post?.title}</h3>
+                    <h3>{post?.title} - { post?.createAt?.seconds ? new Date(post?.createAt?.toDate()).toLocaleDateString() : new Date(post?.createAt).toLocaleDateString()}</h3>
+
                     <p>{post?.description} </p>
                   <Button title={"Delete"} onClickHandler={()=>{handleDelete(post.id)}}/>
                   <Button title={"Edit"} onClickHandler={()=>{handleEdit(post.id)}}/>
